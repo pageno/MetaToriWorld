@@ -1,16 +1,109 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>쿠팡 최저가 검색기</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>MetaToRI 로그인 연동</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <style>
+    body {background:#191c2b;color:#fff;font-family:sans-serif;}
+    .topbar {display:flex;justify-content:space-between;align-items:center;padding:16px 18px;}
+    .login-btn, .logout-btn {
+      background:#41e1ff;color:#181c2b;border:none;padding:8px 18px;border-radius:10px;font-weight:900;font-size:1rem;cursor:pointer;
+    }
+    .profile {display:flex;align-items:center;gap:10px;}
+    .profile-img {width:32px;height:32px;border-radius:50%;background:#fff;}
+    .modal-bg {position:fixed;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;z-index:99;}
+    .modal-box {background:#232749;padding:33px 23px 25px 23px;border-radius:15px;min-width:270px;box-shadow:0 0 18px #41e1ff88;}
+    .modal-box h3 {margin:0 0 18px 0;}
+    .modal-box input {width:100%;padding:9px 7px;margin-bottom:11px;border-radius:7px;border:1px solid #333;}
+    .modal-box button {width:100%;background:#41e1ff;color:#181c2b;border:none;padding:12px 0;border-radius:7px;font-weight:900;}
+    .modal-close {position:absolute;top:11px;right:16px;font-size:1.7rem;color:#fff;background:none;border:none;cursor:pointer;}
+    #loginMsg {color:#ff41d1;margin-top:6px;}
+  </style>
 </head>
 <body>
-  <h1>쿠팡 최저가 검색기</h1>
-  <input type="text" id="searchInput" placeholder="상품명을 입력하세요" />
-  <button onclick="searchProduct()">검색</button>
-  <div id="result"></div>
-  <script src="searchCoupang.js"></script>
+  <!-- 상단 네비 -->
+  <div class="topbar">
+    <div><b>MetaToRI</b></div>
+    <div id="loginWrap">
+      <button class="login-btn" onclick="openLogin()">로그인</button>
+    </div>
+  </div>
+
+  <!-- 로그인 팝업 -->
+  <div id="loginModal" class="modal-bg" style="display:none;">
+    <div class="modal-box" style="position:relative;">
+      <button class="modal-close" onclick="closeLogin()">×</button>
+      <h3>로그인</h3>
+      <input id="walletInput" placeholder="지갑주소(0x...)" maxlength="50">
+      <input id="nicknameInput" placeholder="닉네임" maxlength="20">
+      <button onclick="submitLogin()">확인</button>
+      <div id="loginMsg"></div>
+    </div>
+  </div>
+
+  <script>
+    // 반드시 자신의 웹앱 API 주소로 변경!
+    const API = "https://script.google.com/macros/s/AKfycbcyXGkFIE23GZEDw7hUXbUx7lHyBxXM7RA31A8cgzUuPvsBmB3d67G800bf4U6TBokM5iw/exec";
+
+    // 로그인 팝업 열기/닫기
+    function openLogin() {
+      document.getElementById('loginModal').style.display = 'flex';
+      document.getElementById('walletInput').focus();
+      document.getElementById('loginMsg').innerText = '';
+    }
+    function closeLogin() {
+      document.getElementById('loginModal').style.display = 'none';
+    }
+
+    // 로그인 처리
+    async function submitLogin() {
+      const wallet = document.getElementById('walletInput').value.trim();
+      const nickname = document.getElementById('nicknameInput').value.trim();
+      if(!wallet || !nickname){
+        document.getElementById('loginMsg').innerText = '지갑주소와 닉네임을 모두 입력!';
+        return;
+      }
+      document.getElementById('loginMsg').innerText = '처리 중...';
+      try {
+        const res = await fetch(API, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({wallet, nickname})
+        });
+        const text = await res.text();
+        if(text==="ok"||text==="updated"){
+          localStorage.setItem('metatori_wallet', wallet);
+          localStorage.setItem('metatori_nick', nickname);
+          setLoginUI(wallet, nickname);
+          closeLogin();
+        } else {
+          document.getElementById('loginMsg').innerText = text;
+        }
+      } catch(e) {
+        document.getElementById('loginMsg').innerText = "에러: " + e;
+      }
+    }
+
+    function setLoginUI(wallet, nickname){
+      document.getElementById('loginWrap').innerHTML = `
+        <div class="profile">
+          <div class="profile-img"></div>
+          <span style="font-weight:900;">${nickname}</span>
+          <button class="logout-btn" onclick="logout()">로그아웃</button>
+        </div>
+      `;
+    }
+    function logout(){
+      localStorage.removeItem('metatori_wallet');
+      localStorage.removeItem('metatori_nick');
+      document.getElementById('loginWrap').innerHTML = `<button class="login-btn" onclick="openLogin()">로그인</button>`;
+    }
+    window.onload = function(){
+      const wallet = localStorage.getItem('metatori_wallet');
+      const nickname = localStorage.getItem('metatori_nick');
+      if(wallet && nickname) setLoginUI(wallet, nickname);
+    }
+  </script>
 </body>
 </html>
