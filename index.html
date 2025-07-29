@@ -2,33 +2,119 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>MetaToRI World</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
   <style>
-    html, body {margin:0; padding:0; width:100%; height:100%;}
+    html,body {margin:0;padding:0;width:100vw;height:100%;background:#131638;}
     body {
-      background: #131638;
-      font-family: 'Orbitron', 'Pretendard', sans-serif;
-      color: #f2f7ff;
-      min-height:100vh;
-      position:relative;
-      overflow-x:hidden;
+      font-family:'Orbitron','Pretendard',sans-serif;
+      color:#f2f7ff; min-height:100vh; overflow-x:hidden;
+      background:linear-gradient(125deg,#131638 60%,#251c44 100%);
     }
     #particles {position:fixed; left:0; top:0; width:100vw; height:100vh; z-index:0; pointer-events:none;}
-    header {text-align:center; padding:2.2rem 1rem 1.1rem; background:rgba(12,18,44,0.88);}
-    header h1 {font-size:2rem; color:#74f6ff; text-shadow:0 0 16px #39e6ff, 0 0 48px #c7f9ff; margin-bottom:0.5rem; letter-spacing:0.05em;}
-    .hero {text-align:center; margin-top:1.5rem; position:relative; z-index:2;}
+    /* 인트로 */
+    #intro {
+      position:fixed;z-index:999;left:0;top:0;width:100vw;height:100vh;
+      background:linear-gradient(135deg,#23243a 60%,#252748 100%);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      transition:opacity .7s;opacity:1;
+    }
+    #intro.hide { opacity:0; pointer-events:none;}
+    #intro .intro-glass {
+      background:rgba(22,29,44,0.82);border-radius:30px;
+      box-shadow:0 0 44px 10px #74f6ff33,0 0 75px #da20ff22,0 0 34px #38e0ff11;
+      padding:45px 37px 38px 37px;display:flex;flex-direction:column;align-items:center;
+      border:1.7px solid #38e0ff2a;
+      backdrop-filter:blur(9px);
+      animation:glassPop 1.3s cubic-bezier(.7,0,.3,1);
+    }
+    @keyframes glassPop {
+      0%{opacity:0;transform:scale(0.8);}
+      70%{opacity:1;transform:scale(1.1);}
+      100%{opacity:1;transform:scale(1);}
+    }
+    .intro-logo-ani {
+      background:linear-gradient(120deg,#74f6ff,#da20ff,#ffe869);
+      padding:13px;border-radius:22px;
+      box-shadow:0 0 30px 12px #74f6ff44,0 0 37px #da20ff33;
+      margin-bottom:21px;
+      animation:bounce 2.2s infinite alternate;
+      display:flex;align-items:center;justify-content:center;
+    }
+    @keyframes bounce {
+      0%{transform:translateY(0);}
+      55%{transform:translateY(-6px) scale(1.08);}
+      100%{transform:translateY(0);}
+    }
+    .intro-logo-ani img {width:72px;height:72px;border-radius:14px;}
+    .intro-title {
+      font-family:'Orbitron',Arial,sans-serif;font-size:2.3em;font-weight:900;
+      letter-spacing:3.3px;margin-bottom:6px;
+      background:linear-gradient(92deg,#74f6ff 0%,#da20ff 65%,#ffe869 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      text-shadow:0 0 22px #da20ff44,0 0 8px #74f6ffbb;
+      text-align:center;animation:prismwave 4.5s infinite alternate;
+    }
+    @keyframes prismwave {
+      0%{filter:hue-rotate(0deg) brightness(1);}
+      100%{filter:hue-rotate(-18deg) brightness(1.09);}
+    }
+    .intro-slogan {
+      color:#38e0ff;font-size:1.12em;font-weight:700;
+      letter-spacing:1.2px;text-align:center;margin-bottom:17px;
+      text-shadow:0 0 12px #da20ffbb,0 0 5px #74f6ff99;
+    }
+    .intro-desc {
+      color:#fff;font-size:1.07em;line-height:1.6;max-width:320px;text-align:center;margin-bottom:19px;word-break:keep-all;
+      text-shadow:0 0 5px #0004;
+    }
+    .intro-tap {
+      background:linear-gradient(90deg,#74f6ff,#da20ff);
+      color:#222;padding:13px 38px;font-weight:900;font-size:1.14em;
+      border:none;border-radius:19px;box-shadow:0 0 10px #da20ff45;
+      cursor:pointer;transition:.14s;outline:none;
+      animation:popBtn 1.2s .3s both, glow 1.7s infinite alternate;
+      font-family:'Orbitron',Arial,sans-serif;
+    }
+    .intro-tap:active {filter:brightness(.97)contrast(1.11);}
+    @keyframes popBtn {0%{opacity:0;transform:scale(.75);}100%{opacity:1;transform:none;}}
+    @keyframes glow {0%{box-shadow:0 0 12px #da20ff66;}100%{box-shadow:0 0 26px #74f6ff44,0 0 16px #da20ff33;}}
+    /* 메인 헤더 */
+    header {
+      text-align:center;
+      padding:2.1rem 1rem 1.05rem;
+      background:rgba(12,18,44,0.88);
+      display:flex;align-items:center;justify-content:center;gap:12px;
+      display:none;
+    }
+    header img {height:40px;vertical-align:middle;}
+    .prism-title {
+      font-size:2rem; letter-spacing:0.05em; margin:0;
+      background: linear-gradient(90deg, #74f6ff, #da20ff, #ffe869, #3afca4, #74f6ff 80%);
+      background-size: 200% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      animation: prismMove 3.3s linear infinite;
+      text-shadow: 0 0 24px #6cf6ffbb, 0 0 48px #da20ff77;
+    }
+    @keyframes prismMove {
+      0% {background-position: 0% 50%;}
+      100% {background-position: 200% 50%;}
+    }
+    .hero {text-align:center; margin-top:1.5rem; position:relative; z-index:2; display:none;}
     .hero h2 {font-size:1.6rem; font-weight:700; color:#fff; text-shadow:0 0 14px #d620ff, 0 0 28px #00e6ff;}
     .hero p {margin:0.6rem auto 1.6rem; font-size:1.08rem; color:#fff7; max-width:400px;}
     .neon-btn {
       padding:1rem 2.3rem; font-size:1.15rem; border-radius:100px; border:none; color:#fff;
       background:linear-gradient(90deg,#24f6ff 0,#da20ff 100%);
       box-shadow:0 0 18px #24f6ff, 0 0 28px #da20ff99; cursor:pointer; font-family:inherit;
-      transition:transform 0.13s, box-shadow 0.2s;
       min-width:120px; margin:0.7rem auto 0.2rem auto; display:inline-block;
+      transition:transform 0.13s, box-shadow 0.2s;
     }
-    .neon-btn:active {transform:scale(0.97); box-shadow:0 0 34px #ff2df6, 0 0 28px #22f6ffbb;}
+    .neon-btn:active {transform:scale(0.97);}
     .banner-btn {
       display:block; width:95%; max-width:500px; margin:1.2rem auto 1.7rem auto;
       padding:1.3rem 0.7rem; font-size:1.22rem; font-weight:700;
@@ -40,9 +126,10 @@
       text-align:center;
       z-index:2;
       position:relative;
+      display:none;
     }
     .banner-btn:active {transform:scale(0.98);}
-    .section {margin:2rem auto 1rem auto; background:rgba(15,22,48,0.93); border-radius:17px; box-shadow:0 0 40px #24f6ff16; padding:2.1rem 1rem; max-width:500px; position:relative; z-index:2;}
+    .section {margin:2rem auto 1rem auto; background:rgba(15,22,48,0.93); border-radius:17px; box-shadow:0 0 40px #24f6ff16; padding:2.1rem 1rem; max-width:500px; position:relative; z-index:2; display:none;}
     .section h3 {color:#28e6ff; font-size:1.13rem; margin-bottom:1.1rem; letter-spacing:0.01em; text-shadow:0 0 7px #2ef4ff99;}
     .section p {color:#e9f6fa; margin-bottom:0.8rem; line-height:1.6;}
     .collection-cards {display:flex; gap:1rem; overflow-x:auto; padding-bottom:0.4rem; margin-bottom:0.6rem;}
@@ -59,7 +146,6 @@
     .faq-q.open {background:#da20ff33;}
     .faq-a {background:#252c47; border-radius:0 0 7px 7px; padding:0.65rem 1rem; color:#fff; font-size:0.97rem; margin-bottom:0.2rem; display:none; box-shadow:0 2px 8px #0ef0ff11; border-top:1px solid #28e6ff33; line-height:1.7;}
     .faq-q.open + .faq-a {display:block;}
-    /* --- 파업창 모달 핵심 가독성 업그레이드 --- */
     .modal-bg {display:none; position:fixed; z-index:100; left:0; top:0; width:100vw; height:100vh; background:rgba(10,18,44,0.93); align-items:center; justify-content:center;}
     .modal-bg.active {display:flex;}
     .modal-box {
@@ -67,8 +153,8 @@
       border-radius:16px;
       padding:2rem 1.1rem 1.1rem 1.1rem;
       max-width:360px; width:92vw;
-      max-height:70vh;  /* 세로 최대 70% */
-      overflow-y:auto;   /* 내부만 스크롤 */
+      max-height:70vh;
+      overflow-y:auto;
       box-shadow:0 0 24px #2cf6ff88, 0 0 38px #da20ff77;
       text-align:left;
       border:1.3px solid #2cf6ff99;
@@ -104,10 +190,30 @@
   </style>
 </head>
 <body>
-  <!-- 파티클 -->
+  <!-- 인트로 -->
+  <div id="intro">
+    <div class="intro-glass">
+      <div class="intro-logo-ani">
+        <img src="https://raw.githubusercontent.com/pageno/MetaToRI-Assets/main/Logo.png" alt="로고">
+      </div>
+      <div class="intro-title">MetaToRI World</div>
+      <div class="intro-slogan">Dream Never Fades<br>(꿈은 사라지지 않는다)</div>
+      <div class="intro-desc">
+        MetaToRI World는<br>
+        ‘우리의 꿈이 사라지지 않고,<br>
+        그 꿈이 또 다른 누군가에게 희망이 되어 전달되는’<br>
+        따뜻한 NFT 커뮤니티 프로젝트입니다.
+      </div>
+      <button class="intro-tap" id="enterBtn">터치해서 시작</button>
+    </div>
+  </div>
+  <!-- 음악 -->
+  <audio id="bgm" src="https://github.com/pageno/MetaToRI-Assets/raw/main/%EB%84%88%EC%9D%98%20%EA%BF%88%EC%9D%84%20%EC%9C%84%ED%95%B4.mp3" loop></audio>
+  <!-- 네온 파티클 -->
   <canvas id="particles"></canvas>
   <header>
-    <h1>MetaToRI World</h1>
+    <img src="https://raw.githubusercontent.com/pageno/MetaToRI-Assets/main/Logo.png" alt="MetaToRI Logo">
+    <h1 class="prism-title">MetaToRI World</h1>
   </header>
   <section class="hero">
     <h2>Dream Never Fades</h2>
@@ -119,12 +225,9 @@
     </p>
     <button class="neon-btn" id="projectBtn">프로젝트 전체 소개</button>
   </section>
-
-  <!-- 커뮤니티 입장 네온 배너 -->
   <button class="banner-btn" id="communityBtn">
     🦇 MetaToRI 공식 커뮤니티 입장하기
   </button>
-
   <section class="section">
     <h3>컬렉션 소개</h3>
     <div class="collection-cards">
@@ -144,7 +247,6 @@
     <p>각 컬렉션은 고유한 디자인과 스토리를 가지고 있으며,<br>
       소유자는 컬렉션별로 다양한 혜택과 참여 기회를 누릴 수 있습니다.</p>
   </section>
-
   <section class="section">
     <h3>참여 방법</h3>
     <div class="steps">
@@ -155,7 +257,6 @@
       <div class="step">5. 커뮤니티 참여 : 전용 커뮤니티에서 소통/이벤트</div>
     </div>
   </section>
-
   <section class="section">
     <h3>로드맵</h3>
     <ul class="roadmap-list">
@@ -166,7 +267,6 @@
       <li>장기 목표 - 글로벌 성장, 다양한 협업, 기부 활동 강화</li>
     </ul>
   </section>
-
   <section class="section">
     <h3>자주 묻는 질문 (FAQ)</h3>
     <div class="faq-box">
@@ -198,8 +298,7 @@
       <div class="faq-a">공식 커뮤니티 채널 및 고객 지원센터를 통해 문의 가능합니다.</div>
     </div>
   </section>
-
-  <footer>
+  <footer style="text-align:center;padding:2rem 0 1.2rem 0;color:#9fdfff;opacity:.85;">
     &copy; 2025 MetaToRI World. Dream Never Fades.
   </footer>
 
@@ -211,8 +310,33 @@
       <div id="modalContent"></div>
     </div>
   </div>
-
   <script>
+    // 인트로 → 메인 진입 + 음악 재생
+    document.getElementById('enterBtn').onclick = function() {
+      document.getElementById('intro').classList.add('hide');
+      setTimeout(()=>{
+        document.getElementById('intro').style.display='none';
+        document.querySelector('header').style.display='flex';
+        document.querySelector('.hero').style.display='block';
+        document.getElementById('communityBtn').style.display='block';
+        document.querySelectorAll('.section').forEach(s=>s.style.display='block');
+        document.querySelector('footer').style.display='block';
+      },600);
+      // 음악 재생
+      try {
+        const bgm = document.getElementById('bgm');
+        bgm.currentTime = 0;
+        bgm.volume = 0.8;
+        bgm.play().catch(()=>{
+          bgm.load(); setTimeout(()=>{bgm.play();}, 400);
+        });
+      } catch(e){}
+    };
+    // 모바일 터치 anywhere 진입
+    document.getElementById('intro').addEventListener('touchstart', function(e){
+      if(e.target.id==='intro') document.getElementById('enterBtn').click();
+    });
+
     // 네온 파티클
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
@@ -278,7 +402,7 @@
       MetaToRI World는 꿈이 사라지지 않는 세상을 만드는 NFT 커뮤니티 프로젝트입니다.<br>
       누구나 자신의 꿈을 나누고, 그 꿈은 따뜻한 그림과 메시지로 NFT 아트로 기록됩니다.<br>
       이 NFT는 또 다른 누군가에게 희망이 되어 전해집니다.<br>
-      프로젝트의 수익 일부는꿈꾸는 아이들과 도움이 필요한 곳에 기부되어, 희망의 선순환을 이어갑니다.<br>
+      프로젝트의 수익 일부는 꿈꾸는 아이들과 도움이 필요한 곳에 기부되어, 희망의 선순환을 이어갑니다.<br>
       <br>
       <b>[캐릭터 소개]</b><br>
       MetaToRI(메타토리)는 구름 위에 앉아 꿈을 지키는, 작고 귀여운 아기 박쥐 캐릭터입니다.<br>
